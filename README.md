@@ -15,20 +15,20 @@ When the book instructs installing CLISP, the first 4 sections of this pictorial
 
 ## Equivalents table of keywords in order of appearance (only through ch.9)
 
-Chapters | Common Lisp | Racket 7.2
---|------------|------------
-~4 | `defparameter`, `defun` | `define` (for both)
+Chapters | Common Lisp | Racket 7.2 | ergolib
+--|------------|------------|-----------
+~4 | `defparameter`, `defun` | `define` (for both) | `defv`, `defc`, `defun`
 .| `ash` | `arithmetic-shift`
 .| `setf` (supports *generalized reference*<sup>ch.9</sup>) | `set!` (does not)
 .| `1-`, `1+` | `sub1`, `add1`
-.| `flet` | [`let`](https://docs.racket-lang.org/guide/let.html#%28part._.Parallel_.Binding__let%29) with [`lambda`](https://docs.racket-lang.org/quick/index.html#%28part._.Functions_are_.Values%29)
-.| `labels` | `letrec`
+.| `flet` | [`let`](https://docs.racket-lang.org/guide/let.html#%28part._.Parallel_.Binding__let%29) with [`lambda`](https://docs.racket-lang.org/quick/index.html#%28part._.Functions_are_.Values%29) | `bb :fn`
+.| `labels` | `letrec` | `bb :fn`
 .| `princ` | `display`
 .| Empty list `'()` is false | It's `#t`; there are `empty` (= `'()` = `null`) and `empty?`
 .| `eq` | `eq?`
 .| `oddp` | `odd?`
 .| `progn` | `begin`
-.| Last branch of `cond` starts with `t` | It starts with `else`
+.| Last branch of `cond` starts with `t` | It starts with `else` | Last branch of `mcond` only has body
 .| Each `case` branch is in `(` `)` | It's in `[` `]` ([grouping](https://docs.racket-lang.org/reference/case.html) cases is also possible)
 .| `otherwise` starts the last branch of `case` | `else`
 .| `find-if` (for any sequence) | `findf` (for list)
@@ -36,14 +36,14 @@ Chapters | Common Lisp | Racket 7.2
 .| `equalp` | ø
 .| `string-equal` | `string=?`
 5 | `mapcar` (for list) | `map` (for list)
-.| `remove-if-not` | `filter` 
+.| `remove-if-not` | `filter` | `filter`
 .| `find` | ø ([how](https://docs.racket-lang.org/guide/lambda.html#%28part._lambda-keywords%29) to declare keyword arguments)
 .| `push` (via `setf`) | ø (can be implemented with [macro](https://docs.racket-lang.org/quick/index.html#%28part._.Macros%29))
 6 | `print` (preceded by a newline and followed by a space) | `writeln` (followed by a newline)
 .| `prin1` | `write`
-.| `loop` | function calling itself at the end, or [named](https://docs.racket-lang.org/guide/let.html#%28part._.Named_let%29) `let`
+.| `loop` | function calling itself at the end, or [named](https://docs.racket-lang.org/guide/let.html#%28part._.Named_let%29) `let` | `iterate`
 .| `read-from-string` | ø (can be implemented with [`open-input-string`](https://docs.racket-lang.org/reference/stringport.html#%28def._%28%28quote._~23~25kernel%29._open-input-string%29%29))
-.| `concatenate 'string` | `string-append`
+.| `concatenate 'string` | `string-append` | `cat` (for any sequence)
 .| `string-trim` (matches characters individually) | `string-trim` (matches the string literally; require racket/string)
 .| `prin1-to-string` | `~a`
 .| `coerce 'string`, `coerce 'list` | `list->string`, `string->list`
@@ -53,31 +53,31 @@ Chapters | Common Lisp | Racket 7.2
 .| `alphanumericp` | ø (`char-numeric?`, `char-alphabetic?`) 
 .| `digit-char-p` | `char-numeric?`
 .| `length` (for any sequence) | `length` (for list), `string-length` (for string), `sequence-length`
-.| `subseq` (for any sequence) | `substring`, `vector-copy`, `subsequence` (for any sequence; requires data/collection)
-.| `mapc` | `for-each`
+.| `subseq` (for any sequence) | `substring`, `vector-copy`, `subsequence` (for any sequence; requires data/collection) | `slice` (for any sequence)
+.| `mapc` | `for-each` | `walk`
 .| `with-open-file (:direction :output` | [`call-with-output-file`](https://docs.racket-lang.org/reference/file-ports.html#%28def._%28%28lib._racket%2Fprivate%2Fbase..rkt%29._call-with-output-file%29%29), [`with-output-to-file`](https://docs.racket-lang.org/reference/file-ports.html#%28def._%28%28lib._racket%2Fprivate%2Fbase..rkt%29._with-output-to-file%29%29) (with *thunk*)
 .| `ext:shell` | `system`
-.| `maplist` | ø
+.| `maplist` | ø |`mapcdr`
 8 | `load` | `require` (with [`provide`](https://docs.racket-lang.org/quick/index.html#%28part._.Modules%29) in the referred file)
 .| `loop repeat collect` | [`for/list`](https://docs.racket-lang.org/guide/for.html)
-.| `loop from to` | `for/list` with `range`
+.| `loop from to` | `for/list` with `range` | `for … in (counter`
 .| `set-difference` | `set-subtract` (require racket/set)
 .| `remove-duplicates` (using `eql` by default) | *same* (using `equal?` by default)
-.| `intersection` | `set-intersect` (require racket/set)
+.| `intersection` | `set-intersect` (require racket/set) | `intersection` (for sets)
 .| `some` (for any sequence) | `ormap` (for list), `sequence-ormap`, [`for/or`](https://docs.racket-lang.org/reference/for.html#%28form._%28%28lib._racket%2Fprivate%2Fbase..rkt%29._for%2For%29%29) (for any sequence)
-.| `mapcan` | `append-map`
+.| `mapcan` | `append-map` | `mappend!`
 .| `pushnew` | ø
 9 | `make-array` | `make-vector`
-.| `aref` | `vector-ref`
+.| `aref` | `vector-ref` | `ref` (for anything)
 .| `setf` with *accessor* (via [`defsetf`](http://www.lispworks.com/documentation/HyperSpec/Body/m_defset.htm)??) | ø (specific *setters*)
 .| `setf (aref` | `vector-set!`
-.| `nth` | `list-ref`
-.| `make-hash-table` | `make-hash`
-.| `gethash` | `hash-ref` (throws error when key not found), `hash-ref … #f` (optional *failure-result* at the end), hash-has-key?`
+.| `nth` | `list-ref` | `ref`
+.| `make-hash-table` | `make-hash` | `make-dictionary`
+.| `gethash` | `hash-ref` (throws error when key not found), `hash-ref … #f` (optional *failure-result* at the end), hash-has-key?` | `ref`
 .| `setf (gethash` | `hash-set!`
 .| `round` (returns with remainder—2 return values) | *same* (without remainder)
 .| Second return value is ignored | It's not ignored
-.| `multiple-value-bind` | [`call-with-values`](https://docs.racket-lang.org/reference/values.html#%28def._%28%28quote._~23~25kernel%29._call-with-values%29%29) (how to use only the 1st value??)
+.| `multiple-value-bind` | [`call-with-values`](https://docs.racket-lang.org/reference/values.html#%28def._%28%28quote._~23~25kernel%29._call-with-values%29%29) (how to use only the 1st value??) | `bb :mv`
 .| `dotimes` | `for`
 .| `defstruct` | `struct` (immutable and opaque by default—there are [keywords](https://docs.racket-lang.org/guide/define-struct.html#%28part._struct-options%29) `#:mutable` and `#:prefab`; couldn't find a way to instantiate by naming properties)
 .| `count` (for any sequence) | `sequence-count`
@@ -87,7 +87,7 @@ Chapters | Common Lisp | Racket 7.2
 .| `map` (for any sequence) | `sequence-map`
 .| `sort` (for any sequence) | `sort` (for list), `vector-sort`
 .| `functionp` | `procedure?`
-.| `defmethod` (for type dispatching) | ø 
+.| `defmethod` (for type dispatching) | ø | `define-method`
 .| `funcall` | ø
 .| `incf`, `decf` (via `setf`) | ø
 .| `struct` with dynamic default property value | ø 
