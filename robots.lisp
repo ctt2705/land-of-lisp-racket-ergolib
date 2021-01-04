@@ -9,6 +9,7 @@
 (defc board-width 64)
 (defc board-height 16)
 (defc board-size (* board-width board-height))
+(defc num-robots 10)
 
 ;; directions in dvorak keyboard layout
 (defc directions `(
@@ -50,7 +51,7 @@
 
 (defun print-board (pos monsters)
   (format t
-	  "~%|~{~<|~%|~,65:;~A~>~}|"
+	  (cat "~%|~{~<|~%|~," (->string (add1 board-width)) ":;~A~>~}|")
 	  (for i in (below board-size) collect
 	    (mcond
 	      (member i monsters)
@@ -61,16 +62,16 @@
 
 (defun robots ()
   (bb pos (+ (ash board-size -1) (ash board-width -1))
-      monsters (loop repeat 10 collect (random board-size))
+      monsters (loop repeat num-robots collect (random board-size))
     (iterate main ( (pos pos) (monsters monsters) )
       (print-board pos monsters)
       (bb new-pos (aif (read-command pos) it (return-from main 'bye))
-	(bb new-monsters (progn
+	(bb new-monsters
 	      (for mpos in monsters collect
 		(if (multiple? mpos monsters)
 		  mpos  ; scrap doesn't move
 		  (step-toward new-pos mpos)
-		)))
+		))
 	  (if (every? (fn (mpos) (multiple? mpos new-monsters)) new-monsters)
 	    (return-from main 'player-wins)
 	    (when (member new-pos new-monsters)
