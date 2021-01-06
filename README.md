@@ -11,6 +11,8 @@ Chapter | Racket | Common Lisp + [ergolib](https://github.com/rongarret/ergolib)
 9 | | [orc-battle.lisp](orc-battle.lisp)
 10 | | [evolution.lisp](evolution.lisp)
 11 | | [robots.lisp](robots.lisp)
+13 | | [webserver.lisp](webserver.lisp)
+15 | | [dice-of-doom-v1.lisp](dice-of-doom-v1.lisp)
 
 When the book instructs installing CLISP, the first 4 sections of this pictorial [tutorial](https://docs.racket-lang.org/quick/index.html) was helpful for familiarizing myself with DrRacket (IDE). To install Racket, simply `apt-get install racket` was enough (for linux).
 
